@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:orientation="vertical">
+    <!--xmlns:android="http://schemas.android.com/apk/res/android"-->
+    <RelativeLayout
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:orientation="vertical" >
+
+        <LinearLayout
+            xmlns:android="http://schemas.android.com/apk/res/android"
+            android:layout_width="match_parent"
+            android:layout_height="50dip"
+            android:orientation="horizontal"
+            android:id="@+id/relativeLayout">
+
+            <EditText
+                android:id="@+id/city"
+                android:layout_width="1dp"
+                android:layout_height="match_parent"
+                android:text="" />
+
+            <AutoCompleteTextView
+                android:id="@+id/searchkey"
+                android:layout_width="290dp"
+                android:layout_height="52sp"
+                android:hint="这里输入信息" />
+            <Button
+                android:id="@+id/search"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="12"
+                android:onClick="searchButtonProcess"
+                android:padding="10dip"
+                android:text="搜索"
+                android:background="#003e4245"
+                android:layout_alignParentTop="true"
+                android:layout_alignParentEnd="true" />
+        </LinearLayout>
+
+        <!--<RelativeLayout-->
+        <!--xmlns:android="http://schemas.android.com/apk/res/android"-->
+        <!--android:layout_width="fill_parent"-->
+        <!--android:layout_height="50dip"-->
+        <!--android:orientation="horizontal" >-->
+
+        <!--</RelativeLayout>-->
+
+        <fragment
+            xmlns:android="http://schemas.android.com/apk/res/android"
+            android:id="@+id/map"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            class="com.baidu.mapapi.map.SupportMapFragment"
+            android:layout_below="@+id/relativeLayout"
+            android:layout_alignParentStart="true" />
+
+        <!--<Button-->
+        <!--android:id="@+id/search"-->
+        <!--android:layout_width="wrap_content"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:layout_weight="12"-->
+        <!--android:onClick="searchButtonProcess"-->
+        <!--android:padding="10dip"-->
+        <!--android:text="搜索"-->
+        <!--android:background="#003e4245"-->
+        <!--android:layout_alignParentTop="true"-->
+        <!--android:layout_alignParentEnd="true" />-->
+
+        <Button
+            android:id="@+id/drive"
+            android:layout_width="wrap_content"
+            android:layout_height="77dp"
+            android:onClick="SearchButtonProcess"
+            android:text="驾车"
+            android:layout_centerVertical="true"
+            android:layout_alignStart="@+id/walk" />
+        <Button
+            android:id="@+id/walk"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:onClick="SearchButtonProcess"
+            android:text="步行"
+            android:layout_marginBottom="150dp"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentEnd="true" />
+    </RelativeLayout>
+
+</LinearLayout>
