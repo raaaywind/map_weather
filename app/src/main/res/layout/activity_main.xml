@@ -34,7 +34,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_weight="12"
-                android:onClick="searchButtonProcess"
+                android:onClick="SearchButtonProcess"
                 android:padding="10dip"
                 android:text="搜索"
                 android:background="#003e4245"
@@ -74,7 +74,7 @@
         <Button
             android:id="@+id/drive"
             android:layout_width="wrap_content"
-            android:layout_height="77dp"
+            android:layout_height="50dp"
             android:onClick="SearchButtonProcess"
             android:text="驾车"
             android:layout_centerVertical="true"
@@ -82,11 +82,10 @@
         <Button
             android:id="@+id/walk"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_height="50dp"
             android:onClick="SearchButtonProcess"
             android:text="步行"
-            android:layout_marginBottom="150dp"
-            android:layout_alignParentBottom="true"
+            android:layout_below="@+id/drive"
             android:layout_alignParentEnd="true" />
     </RelativeLayout>
 

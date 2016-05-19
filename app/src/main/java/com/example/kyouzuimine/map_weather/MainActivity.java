@@ -1,5 +1,6 @@
 package com.example.kyouzuimine.map_weather;
 
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.text.Editable;
@@ -59,6 +60,8 @@ import com.baidu.mapapi.search.sug.SuggestionResult;
 import com.baidu.mapapi.search.sug.SuggestionSearch;
 import com.baidu.mapapi.search.sug.SuggestionSearchOption;
 
+import java.util.List;
+
 /**
  * 演示poi搜索功能
  */
@@ -103,6 +106,8 @@ public class MainActivity extends FragmentActivity implements
 
     Button Drive = null;
     Button Walk = null;
+
+    Weather weather;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -181,7 +186,7 @@ public class MainActivity extends FragmentActivity implements
             @Override
             public boolean onMarkerClick(Marker marker) {
                 // TODO Auto-generated method stub
-                Toast.makeText(getApplicationContext(), "Marker被点击了！", Toast.LENGTH_SHORT).show();
+                //Toast.makeText(getApplicationContext(), "Marker被点击了！", Toast.LENGTH_SHORT).show();
                 return false;
             }
         });
@@ -194,31 +199,7 @@ public class MainActivity extends FragmentActivity implements
         Drive = (Button)findViewById(R.id.drive);
         Walk = (Button)findViewById(R.id.walk);
 
-//        Drive.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                route = null;
-//                //mBtnPre.setVisibility(View.INVISIBLE);
-//                //mBtnNext.setVisibility(View.INVISIBLE);
-//                mBaiduMap.clear();
-//                mSearch.drivingSearch((new DrivingRoutePlanOption())
-//                    .from(stNode)
-//                    .to(enNode));
-//            }
-//        });
-//
-//        Walk.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                route = null;
-//                //mBtnPre.setVisibility(View.INVISIBLE);
-//                //mBtnNext.setVisibility(View.INVISIBLE);
-//                mBaiduMap.clear();
-//                mSearch.walkingSearch((new WalkingRoutePlanOption())
-//                        .from(stNode)
-//                        .to(enNode));
-//            }
-//        });
+
     }
 
     @Override
@@ -253,7 +234,7 @@ public class MainActivity extends FragmentActivity implements
      *
      * @param v
      */
-    public void searchButtonProcess(View v) {
+    public void SearchButtonProcess(View v) {
         if (v.getId() == R.id.search) {
         EditText editCity = (EditText) findViewById(R.id.city);
         EditText editSearchKey = (EditText) findViewById(R.id.searchkey);
@@ -262,12 +243,20 @@ public class MainActivity extends FragmentActivity implements
                 .keyword(editSearchKey.getText().toString())
                 .pageNum(load_Index));
         } else if (v.getId() == R.id.drive) {
+            if (enNode == null) {
+                Toast.makeText(MainActivity.this,"未输入终点地址",Toast.LENGTH_SHORT).show();
+                return;
+            }
             route = null;
             mBaiduMap.clear();
             mSearch.drivingSearch((new DrivingRoutePlanOption())
                     .from(stNode)
                     .to(enNode));
         }  else if (v.getId() == R.id.walk) {
+            if (enNode == null) {
+                Toast.makeText(MainActivity.this,"未输入终点地址",Toast.LENGTH_SHORT).show();
+                return;
+            }
             route = null;
             mBaiduMap.clear();
             mSearch.walkingSearch((new WalkingRoutePlanOption())
@@ -278,7 +267,7 @@ public class MainActivity extends FragmentActivity implements
 
     public void goToNextPage(View v) {
         load_Index++;
-        searchButtonProcess(null);
+        SearchButtonProcess(null);
  }
 
     public void onGetPoiResult(PoiResult result) {
@@ -316,7 +305,7 @@ public class MainActivity extends FragmentActivity implements
             Toast.makeText(MainActivity.this, "抱歉，未找到结果", Toast.LENGTH_SHORT)
                     .show();
         } else {
-            Toast.makeText(MainActivity.this, result.getLocation() + "," + "\n" + result.getName() + ": " + result.getAddress(), Toast.LENGTH_SHORT)
+            Toast.makeText(MainActivity.this, result.getName() + ": " + result.getAddress(), Toast.LENGTH_SHORT)
                     .show();
             loc_name = result.getAddress();
             ll = result.getLocation();
@@ -383,6 +372,9 @@ public class MainActivity extends FragmentActivity implements
                 LatLng a = new LatLng(location.getLatitude(), location.getLongitude());
                 PlanNode b = PlanNode.withLocation(a);
                 stNode = b;
+                String aaa;
+                aaa = "" + location.getLongitude() + "," + location.getLatitude();
+                new GetWeatherData().execute(aaa);
             }
         }
     }
@@ -529,6 +521,26 @@ public class MainActivity extends FragmentActivity implements
                 return BitmapDescriptorFactory.fromResource(R.drawable.icon_en);
             }
             return null;
+        }
+    }
+
+    class GetWeatherData extends AsyncTask<String, Integer, List<WeatherInfo>> {
+        @Override
+        protected List<WeatherInfo> doInBackground(String... params) {
+            List<WeatherInfo> weatherInfos = WeatherApi.getWeatherInfo(MainActivity.this, params[0]);
+//            Log.e("weatherinfo", weatherInfos.get(0).getTemperature());
+            return weatherInfos;
+        }
+
+        @Override
+        protected void onPostExecute(List<WeatherInfo> weatherInfos) {
+            String weather1 = "今天天气: " + weatherInfos.get(0).getWeather() + "  " +
+                    weatherInfos.get(0).getTemperature() + "  " +
+                    weatherInfos.get(0).getWind();
+            String weather2 = "明天天气: " + weatherInfos.get(1).getWeather() + "  " +
+                    weatherInfos.get(1).getTemperature() + "  " +
+                    weatherInfos.get(1).getWind();
+            Toast.makeText(MainActivity.this, weather1 + "\n" + weather2, Toast.LENGTH_LONG).show();
         }
     }
 
